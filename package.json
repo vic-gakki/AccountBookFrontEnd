@@ -9,14 +9,21 @@
   },
   "dependencies": {
     "ant-design-vue": "^1.6.5",
+    "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "js-cookie": "^2.2.1",
+    "nprogress": "^0.2.0",
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.3",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
@@ -35,7 +42,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off",
+      "no-undef": "off"
+    }
   },
   "browserslist": [
     "> 1%",

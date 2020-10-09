@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Layout from "../views/Layout.vue";
+import Layout from "../layout";
 
 Vue.use(VueRouter);
 
-const routes = [
+export const asyncRoutes = [
   {
     path: "/",
     name: "Layout",
@@ -24,6 +24,9 @@ const routes = [
       },
     ],
   },
+];
+
+export const constantRoutes = [
   {
     path: "/login",
     name: "Login",
@@ -39,10 +42,19 @@ const routes = [
     name: "Other",
     redirect: "/404",
   },
-];
+]
 
-const router = new VueRouter({
-  routes,
-});
+
+const createRouter = () => new VueRouter({
+  scrollBehavior: () => ({y: 0}),
+  routes: constantRoutes.concat(asyncRoutes)
+})
+
+const router = createRouter()
+
+export function resetRouter(){
+  const initRouter = createRouter()
+  router.matcher = initRouter.matcher
+}
 
 export default router;
