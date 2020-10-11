@@ -14,15 +14,50 @@ export const asyncRoutes = [
       {
         path: "home",
         name: "Home",
+        meta: {icon: 'dashboard', title: '首页'},
         component: () => import(/* webpackChunkName: "home" */ "../views/Home"),
       },
       {
-        path: "/about",
+        path: "about",
         name: "About",
+        meta: {icon: 'book', title: '关于'},
         component: () =>
           import(/* webpackChunkName: "about" */ "../views/About.vue"),
       },
+      {
+        path: 'setting',
+        name: 'Setting',
+        meta: {icon: 'setting', title: '设置'},
+        component: () => import("../views/Setting")
+      },
+      {
+        path: 'test',
+        name: 'TestNav1',
+        meta: {icon: 'dashboard', title: 'test nav 1'},
+        component: () => import('../views/Test'),
+        children: [
+          {
+            path: "childone",
+            name: "childone",
+            meta: {icon: 'book', title: 'test nav 1-1'},
+            component: () => import(/* webpackChunkName: "home" */ "../views/Home"),
+          },
+          {
+            path: "childtwo",
+            name: "childtwo",
+            meta: {icon: 'book', title: 'test nav 1-2'},
+            component: () =>
+              import(/* webpackChunkName: "about" */ "../views/About.vue"),
+          },
+        ]
+      }
     ],
+  },
+  {
+    path: "*",
+    name: "Other",
+    hidden: true,
+    redirect: "/404",
   },
 ];
 
@@ -37,17 +72,12 @@ export const constantRoutes = [
     name: "Error",
     component: () => import("../views/404"),
   },
-  {
-    path: "*",
-    name: "Other",
-    redirect: "/404",
-  },
 ]
 
 
 const createRouter = () => new VueRouter({
   scrollBehavior: () => ({y: 0}),
-  routes: constantRoutes.concat(asyncRoutes)
+  routes: constantRoutes
 })
 
 const router = createRouter()

@@ -1,6 +1,8 @@
 <template>
   <a-layout class="page-container">
-    <a-layout-header :style="headerLayout" />
+    <a-layout-header :style="headerLayout">
+      <nav-bar></nav-bar>
+    </a-layout-header>
     <a-layout :style="contentLayout">
       <a-layout-sider v-model="collapsed" collapsible breakpoint="sm">
         <side-bar></side-bar>
@@ -16,10 +18,12 @@
 
 <script>
 import SideBar from "./SideBar";
+import NavBar from './NavBar'
 export default {
   name: "Layout",
   components: {
     SideBar,
+    NavBar,
   },
   computed: {
     contentLayout() {

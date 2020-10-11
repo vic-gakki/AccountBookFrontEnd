@@ -1,30 +1,14 @@
-<template>
-  <a-menu
-    theme="dark"
-    mode="inline"
-    :default-selected-keys="activeMenu"
-    class="menu-container"
-  >
-    <a-menu-item key="1">
-      <a-icon type="user" />
-      <span class="nav-text">nav 1</span>
-    </a-menu-item>
-    <sidebar-item
-      v-for="route in permission_routes.children"
-      :key="route.path"
-      :route="route"
-      base-path="/"
-    />
-  </a-menu>
-</template>
-
 <script>
-import SidebarItem from "./SidebarItem";
+import Item from './Item'
+import SideLink from './SideLink'
+import { isExternal } from "@/utils";
+import path from 'path'
 import { mapGetters } from "vuex";
 export default {
   name: "SideBar",
   components: {
-    SidebarItem,
+    Item,
+    SideLink,
   },
   computed: {
     ...mapGetters(["permission_routes"]),
@@ -37,6 +21,64 @@ export default {
       return path;
     },
   },
+  data(){
+    let activeSub = this.$route.path.slice(0, this.$route.path.lastIndexOf('/'))
+    activeSub = activeSub ? [activeSub] : []
+    return {
+      activeSub
+    }
+  },
+  methods: {
+    resolvePath(routePath, basePath) {
+      if (isExternal(routePath)) {
+        return routePath
+      }
+      if (isExternal(this.basePath)) {
+        return this.basePath
+      }
+      routePath = path.resolve(basePath, routePath)
+      return routePath
+    },
+    renderSideItem(route, basePath = '/'){
+      const path = this.resolvePath(route.path, basePath)
+      if(route.hidden){
+        return ''
+      }else if(route.children && route.children.length){
+        return (
+          <a-sub-menu key={path} path={path}>
+            <item slot="title" icon={route.meta.icon} title={route.meta.title}></item>
+            {route.children.map(childRoute => {
+             return this.renderSideItem(childRoute, path)
+            })}
+          </a-sub-menu>
+        ) 
+      }else {
+        return (
+          <a-menu-item key={path} path={path}>
+            <side-link to={path}>
+              <item icon={route.meta.icon} title={route.meta.title}></item>
+            </side-link>
+          </a-menu-item>
+        )
+      }
+    },
+    handleOpenChange(openKeys){
+      this.activeSub = openKeys.length ? [openKeys[openKeys.length - 1]] : []
+    },
+    handleSelect({key}){
+      let sub = key.slice(0, key.lastIndexOf('/'))
+      this.activeSub = sub ? [sub] : []
+    }
+  },
+  render(h){
+    return (
+      <a-menu theme="dark" mode="inline" default-selected-keys={[this.activeMenu]} onSelect={this.handleSelect} onOpenChange={this.handleOpenChange} open-keys={this.activeSub} class="menu-container">
+        {this.permission_routes[0].children.map(route => {
+          return this.renderSideItem(route)
+        })}
+      </a-menu>
+    )
+  }
 };
 </script>
 

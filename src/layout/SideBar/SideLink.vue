@@ -1,7 +1,7 @@
 <template>
-  <component :is="type" v-bind="transformProps(to)">
-    <slot></slot>
-  </component>
+    <component :is="type" v-bind="transformProps(to)" class="side-link">
+      <slot></slot>
+    </component>
 </template>
 
 <script>
@@ -37,4 +37,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+  .side-link {
+    color: #fff
+  }
+</style>

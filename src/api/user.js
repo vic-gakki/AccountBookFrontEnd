@@ -1,3 +1,4 @@
 export const login = params => axios.post('/user/login', params)
-export const getInfo = params => axios.post('/user/info', params)
-export const logout = params => axios.post('/user/logout', params)
+export const getInfo = () => axios.post('/user/info')
+export const logout = () => axios.post('/user/logout')
+export const updatePass = '/user/updatePass'

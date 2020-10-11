@@ -16,7 +16,7 @@
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
+    "vue-router": "3.0.7",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -44,7 +44,10 @@
     },
     "rules": {
       "no-unused-vars": "off",
-      "no-undef": "off"
+      "no-undef": "off",
+      "no-debugger": "off",
+      "vue/no-unused-components": "off",
+      "no-prototype-builtins": "off"
     }
   },
   "browserslist": [

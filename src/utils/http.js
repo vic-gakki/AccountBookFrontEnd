@@ -60,7 +60,7 @@ export function httpInit(vue){
       const {data} = error.response
       // 40108: token不合法  40116: token已过期  清楚token记录，重新登陆
       if(data.errorCode === 40108 || data.errorCode === 40116){
-        this.$error({
+        vue.prototype.$error({
           title: '错误警告',
           content: '登录信息已失效, 请重新登陆',
           onOk(){
@@ -76,7 +76,7 @@ export function httpInit(vue){
             return `${acc}\n${cur}`
           })
         }
-        this.$message.error({
+        vue.prototype.$message.error({
           content: message,
           duration: 2
         })
