@@ -5,7 +5,7 @@
       <h1 class="platform">Account Book</h1>
     </div>
     <div class="right-user-container">
-      <a-icon type="user" class="avatar"/>
+      <a-avatar class="avatar" icon="user" />
       <a-dropdown>
         <span class="ant-dropdown-link name-dropdown">
            {{name}} <a-icon type="down" />
@@ -73,9 +73,9 @@ export default {
     }
   }
   .right-user-container {
-    font-size: 16px;
+    font-size: 18px;
     .avatar {
-      margin-right: 8px;
+      margin-right: 5px;
     }
     .name-dropdown {
       cursor: pointer;

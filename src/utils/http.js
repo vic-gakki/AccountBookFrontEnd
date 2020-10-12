@@ -5,7 +5,7 @@ import { basicAuthToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 5000 // request timeout
+  timeout: 15000 // request timeout
 })
 
 export function httpInit(vue){
@@ -51,8 +51,9 @@ export function httpInit(vue){
   )
   service.interceptors.response.use(
     response => {
+      // vue.prototype.$message.success(response.data.msg)
       vue.$loading.close()
-      return response.data
+      return response.data.data
     },
     error => {
       vue.$loading.close()

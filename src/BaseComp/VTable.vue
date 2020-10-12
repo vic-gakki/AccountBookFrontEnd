@@ -1,7 +1,7 @@
 
 <script>
     import {slotcontent, urlPackingGet} from "@/utils";
-
+    import Axios from 'axios'
     export default {
         name: "VTable",
         props:{
@@ -43,7 +43,9 @@
                     current:1,
                     total:0,
                 },this.$attrs.pagination),
-                loading:false
+                loading:false,
+                params: {},
+                ajaxsource: null
             }
         },
         created(){
@@ -51,8 +53,6 @@
             this.$bus.$on(this.table_id+'reload',(rs)=>{
                 this.loadData(rs)
             });
-            this.params = {};
-            this.ajaxsource = null;
         },
         beforeDestroy(){
             this.$bus.$off(this.table_id+'reload');
@@ -61,83 +61,63 @@
 
         },
         methods:{
-            loadData(reloadevent){
+            loadData(reloadevent = {}){
                 if(!this.url){
                     return;
-                }
-                if (this.params&&this.params.__page&&this.params.__page!=0){
-                    if (this.data&&this.data.length&&this.data.length==1){
-                        this.params.__page=this.params.__page-1
-                    }
-                }
-                this.params = this.params || {};
-                if(this.currentAjax){
-                    this.currentAjax.abort();
-                }
-                if(!reloadevent){
-                    reloadevent = {};
                 }
                 if(!this.page_request && reloadevent.type == 'page'){
                     return;
                 }
                 this.loading = true;
-
                 if(reloadevent.type == 'page'){
                     this.cpagination.current = reloadevent.data.current;
-                    this.params.__page =reloadevent.data.current-1;
-                    this.params.__page_size=reloadevent.data.pageSize;
+                    this.params.pageSize=reloadevent.data.pageSize;
                 }
                 if(reloadevent.type == 'search'){
-                    let {__page,__page_size} = this.params;
-                    this.params = {...this.params,...reloadevent.data,__page,__page_size};
-                    console.log(reloadevent.data,this.params);
                     this.cpagination.current = 1;
-                    this.params.__page = 0;
+                    let {pageSize} = this.params;
+                    this.params = {...reloadevent.data, pageSize};
                 }
+                this.params.page = this.cpagination.current - 1
                 if(reloadevent.type == 'reset'){
                     this.params = {};
                 }
                 this.params = {...this.defaultParams, ...this.params};
-                if(this.ajaxsource){
+                this.fetchData(this.params, reloadevent)
+            },
+            async fetchData(params, reloadevent){
+                 if(this.ajaxsource){
                     this.ajaxsource.cancel('Operation canceled by the user.');
                 }
-                const CancelToken = axios.CancelToken;
+                const CancelToken = Axios.CancelToken;
                 const ajaxsource = CancelToken.source();
                 this.ajaxsource = ajaxsource;
-
-                let urlPacking = urlPackingGet(this.url)
-                urlPacking({
-                    ...this.params,
-                    noloading:true
-                },{
-                    cancelToken: ajaxsource.token,
-                }).then((res) =>{
-                    this.loading = false;
-                    // this.data.splice(0,0,...res.list);
-                    //   this.data.push(res.list[0])
-                    this.data = res.list;
-
-                    // 页面实时获取改变
-                    // if(reloadevent.type == 'created'){
-                    this.$emit('fetchSuccess',res);
-                    // }
-                    this.ajaxsource = null;
-                    if(this.page_request){
-                        const {cpagination} = this;
-                        if(cpagination !== false){
-                            if(res.page){
-                                cpagination.total =  parseInt(res.page.count);
-                            }
-                            if(res.page_info){
-                                cpagination.total =  parseInt(res.page_info.count);
-                            }
-                            this.cpagination = cpagination;
-                        }
-
-                    }
-
+                const urlPacking = urlPackingGet(this.url)
+                const res = await urlPacking({
+                    ...params,
+                    noloading: true
+                }, {
+                    cancelToken: this.ajaxsource.token
                 })
-
+                this.loading = false;
+                this.ajaxsource = null;
+                if(!res.list.length && params.page > 0){
+                    this.cpagination.current--
+                    await this.fetchData({...params, page: params.page - 1}, reloadevent)
+                    return 
+                }
+                this.data = res.list;
+                if(reloadevent.type == 'created'){
+                    this.$emit('fetchSuccess',res);
+                }
+                if(this.page_request){
+                    const {cpagination} = this;
+                    if(cpagination !== false){
+                        if(res.page){
+                            cpagination.total =  parseInt(res.page.count);
+                        }
+                    }
+                }
             },
             pagechange(pagination, filters, sorter, { currentDataSource }){
                 this.loadData({type:'page',data:pagination});

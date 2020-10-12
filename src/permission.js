@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // progress bar
@@ -41,7 +42,7 @@ router.beforeEach(async(to, from, next) => {
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
-          this.$message.error(error.msg || 'Has Error')
+          Vue.prototype.$message.error(error.msg || 'Has Error')
           next(`/login`)
           NProgress.done()
         }
