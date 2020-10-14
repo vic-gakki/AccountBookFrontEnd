@@ -18,11 +18,11 @@ export const asyncRoutes = [
         component: () => import(/* webpackChunkName: "home" */ "../views/Home"),
       },
       {
-        path: "about",
-        name: "About",
-        meta: {icon: 'book', title: '关于'},
+        path: "account",
+        name: "Account",
+        meta: {icon: 'book', title: '账本'},
         component: () =>
-          import(/* webpackChunkName: "about" */ "../views/About.vue"),
+          import(/* webpackChunkName: "account" */ "../views/Account"),
       },
       {
         path: 'setting',
@@ -47,7 +47,7 @@ export const asyncRoutes = [
             name: "childtwo",
             meta: {icon: 'book', title: 'test nav 1-2'},
             component: () =>
-              import(/* webpackChunkName: "about" */ "../views/About.vue"),
+              import(/* webpackChunkName: "account" */ "../views/Account"),
           },
         ]
       }

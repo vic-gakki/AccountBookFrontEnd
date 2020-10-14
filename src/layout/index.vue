@@ -8,7 +8,7 @@
         <side-bar></side-bar>
       </a-layout-sider>
       <a-layout-content>
-        <div :style="contentStyle">
+        <div id="contentContainer" :style="contentStyle">
           <router-view></router-view>
         </div>
       </a-layout-content>
@@ -40,7 +40,7 @@ export default {
     contentStyle() {
       return {
         padding: "24px",
-        background: "#fff",
+        background: "#f0f2f5",
         height: "100%",
         overflow: "auto",
       };

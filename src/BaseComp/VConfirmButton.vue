@@ -2,29 +2,32 @@
     import {filterProps, urlPackingGet} from "@/utils";
     import {message} from "ant-design-vue";
     export default {
-        name: "VDeleteButton",
+        name: "VConfirmButton",
         props: {
             data: Object, //默认取data.id，
             table_id:{
                 type:String,
                 default:'VTable'
             },
-            title:{
-                type:String,
-                default:'确认删除？'
+            type: {
+                type: String,
+                default: '删除'
             },
+            name: [String, Number],
+            label: String,
             url:{//删除url地址
                 type:[String,Function],
                 default:''
             },
-            massage:{
-                type:String,
-                default:'删除成功！'
-            },
             styleType:{//按钮显示样式  button样式  text 样式
                 type:[String],
-                default:'button'
+                default:'text'
             },
+        },
+        computed:{
+            title(){
+                return `确认${this.type}${this.label}：${this.name}？`
+            }
         },
         methods: {
             onClick() {
@@ -37,9 +40,9 @@
                         return new Promise((resolve, reject) => {
                             let urlPacking = urlPackingGet(this.url)
                             urlPacking({...this.data,noloading:true}).then((res)=>{
-                                message.success(this.massage);
+                                message.success(this.type + '成功');
                                 this.$emit("submitSuccess", res)
-                                this.$bus.$emit(this.table_id+'reload',{type:'delete'});
+                                this.$bus.$emit(this.table_id+'reload',{type:'update'});
                                 resolve();
                             }).catch(()=>{
                                 resolve();
@@ -58,10 +61,10 @@
 
             switch (this.styleType) {
                 case 'text':
-                    return (
+                    return (<span class="btn">
                         <a props={btn_props} on={{click: this.onClick}}>
             {this.$slots.default}
-        </a>
+        </a></span>
 
         )
         default:
@@ -77,9 +80,7 @@
 </script>
 
 <style scoped>
-    .content{}
     .bottom{
-
         position: absolute;
         left: 0;
         bottom: 0;

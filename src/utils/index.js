@@ -60,3 +60,6 @@ export function slotcontent() {
     });
   return slots;
 }
+export function toString(arg){
+  return Object.prototype.toString.call(arg).slice(8, -1)
+}

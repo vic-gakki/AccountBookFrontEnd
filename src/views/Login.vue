@@ -77,7 +77,7 @@ export default {
 <style lang="scss">
 .login-container {
   height: 100vh;
-  background: url('../assets/login.png') center/cover no-repeat;
+  background: url('../assets/img/login.png') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -33,7 +33,7 @@ export default {
   },
   data(){
     return {
-      logo: require('@/assets/fave.png')
+      logo: require('@/assets/img/fave.png')
     }
   },
   methods: {

@@ -206,9 +206,9 @@
                         {pop}
             </span>
                     :<span class="btn">
-                    <span props={btn_props} on={{click: this.onClick}}>
+                    <a props={btn_props} on={{click: this.onClick}}>
                 {this.$slots.default}
-            </span>
+            </a>
                         {pop}
             </span>
             )
@@ -217,9 +217,7 @@
 </script>
 
 <style scoped>
-    .content{}
     .bottom{
-
         position: absolute;
         left: 0;
         bottom: 0;
@@ -228,7 +226,6 @@
         padding: 10px 16px;
         background: #fff;
         text-align: right;
-
+        z-index: 2;
     }
-    .btn{margin-right: 10px;}
 </style>
