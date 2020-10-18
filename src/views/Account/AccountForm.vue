@@ -1,10 +1,11 @@
 <template>
   <div class="account-form-container">
-    <v-form class="account-form" :url="$api.postFareUrl" :items="items" :block_labelCol="4" :block_wrapperCol="16" :form-colon='false' form-labelAlign="right" form_id="accountForm"></v-form>
+    <v-form class="account-form" :data="data" :url="$api.postFareUrl" :items="items" :block_labelCol="4" :block_wrapperCol="16" :form-colon='false' form-labelAlign="right" form_id="accountForm"></v-form>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: "AccountForm",
   props: {
@@ -24,6 +25,10 @@ export default {
               'item-label': '支出时间',
               valueFormat: 'YYYY-MM-DD HH:mm:ss',
               'rule-required': true,
+              "not-computed-disabledDate": current => {
+                let now = moment()
+                return current > now
+              },
               block: true,
             }
           }
@@ -32,7 +37,7 @@ export default {
           'v-select',
           {
             props: {
-              'field-name': 'fareCate',
+              'field-name': 'fareCategoryId',
               'item-label': '费用类别',
               'rule-required': true,
               'url': this.$api.fareListUrl,
@@ -88,5 +93,8 @@ export default {
 <style lang="scss">
   .account-form-container {
     padding-top: 24px;
+    .ant-calendar-picker {
+      width: 100%;
+    }
   }
 </style>

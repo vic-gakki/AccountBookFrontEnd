@@ -149,7 +149,7 @@ export default {
       if (this.url) {
         let urlPacking = urlPackingGet(this.url);
         urlPacking({ ...this.params, noloading: true }).then(res => {
-          res.list.forEach(item => (item.id = item.id.toString()));
+          // res.list.forEach(item => (item.id = item.id.toString()));
           this.mslist = res.list;
           this.$emit("fetchSuccess", res.list);
         });

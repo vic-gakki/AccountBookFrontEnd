@@ -9,11 +9,20 @@
                 type:String,
                 default:'VTable'
             },
+            /**
+             * 操作类型名称
+             */
             type: {
                 type: String,
                 default: '删除'
             },
+            /**
+             * 操作对象名称
+             */
             name: [String, Number],
+            /**
+             * 操作对象类型
+             */
             label: String,
             url:{//删除url地址
                 type:[String,Function],
@@ -26,7 +35,7 @@
         },
         computed:{
             title(){
-                return `确认${this.type}${this.label}：${this.name}？`
+                return `确认${this.type}${this.label}${this.name ? ': ' + this.name : ''}？`
             }
         },
         methods: {

@@ -50,15 +50,11 @@
         },
         created(){
             this.loadData({type:'created'});
-            this.$bus.$on(this.table_id+'reload',(rs)=>{
-                this.loadData(rs)
-            });
-        },
-        beforeDestroy(){
-            this.$bus.$off(this.table_id+'reload');
-        },
-        mounted(){
-
+            const callback = this.loadData.bind(this)
+            this.$bus.$on(this.table_id+'reload', callback);
+            this.$once('hook:beforeDestroy', () => {
+                this.$bus.$off(this.table_id+'reload', callback)
+            })
         },
         methods:{
             loadData(reloadevent = {}){

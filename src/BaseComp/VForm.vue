@@ -77,7 +77,7 @@
                                         if(nameArray.length>1){
                                             multikey_map[name]=[...nameArray]
                                         }
-                                        fields[name] = this.$form.createFormField({value:''});
+                                        fields[name] = this.$form.createFormField({value: undefined});
                                     }
                                 });
                                 for(let key in this.data){
@@ -103,20 +103,18 @@
             };
         },
         created() {
-            this.$bus.$on(this.form_id+'submit',()=>{
-                return this.handleSubmit();
-            });
-            this.$bus.$on(this.form_id+'reset',()=>{
-                return this.resetForm();
-            });
+            let submitCallback = this.handleSubmit.bind(this), 
+                submitEvent = this.form_id+'submit', 
+                resetCallback = this.resetForm.bind(this), 
+                resetEvent = this.form_id+'reset'
+            this.$bus.$on(submitEvent, submitCallback);
+            this.$bus.$on(resetEvent, resetCallback);
             this.initFormData();
             this.options_callback = {};
-        },
-        beforeDestroy(){
-            this.options_callback = {};
-            this.$bus.$off(this.form_id+'submit');
-            this.$bus.$off(this.form_id+'reset');
-
+            this.$once('hook:beforeDestroy', () => {
+                this.$bus.$off(submitEvent, submitCallback)
+                this.$bus.$off(resetEvent, resetCallback)
+            })
         },
         methods:{
             initFormData(){
@@ -172,7 +170,7 @@
                       let item = Object.assign({},block)
                     let options =  item[1];
                     let name = options.props['field-name'];
-                    fileds[name] = '';
+                    fileds[name] = undefined;
                   });
               this.form.setFieldsValue(fileds);
             },
@@ -317,10 +315,16 @@
 
                     for(let key in options.props){
                         if(typeof options.props[key] == 'function'){
-                            if(!this.options_callback[index]){
-                                this.options_callback[index] = {};
+                            if(!key.startsWith('not-computed')){
+                                if(!this.options_callback[index]){
+                                    this.options_callback[index] = {};
+                                }
+                                this.options_callback[index][key] = options.props[key];
+                            }else {
+                                let name = key.slice(13)
+                                options.props[name] = options.props[key]
+                                delete options.props[key]
                             }
-                            this.options_callback[index][key] = options.props[key];
                         }
                     }
                 }

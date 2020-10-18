@@ -16,7 +16,7 @@
             <fare-category :id="scope.id" :name="scope.name"></fare-category>
           </template>
         </v-edit-button>
-        <v-delete-button :url="$api.fareCategoryDelete" :data="{id: scope.id}" :title="'确认删除费用类别:' + scope.name + '?'">删除</v-delete-button>
+        <v-confirm-button :url="$api.fareCategoryDelete" :data="{id: scope.id}" label="费用类别" :name="scope.name">删除</v-confirm-button>
       </template>
     </v-table>
   </div>
@@ -34,7 +34,9 @@ export default {
       columns: [
         {
           title: '序号',
-          dataIndex: 'id'
+          customRender(text, scope, index){
+            return index + 1
+          }
         },
         {
           title: '名称',

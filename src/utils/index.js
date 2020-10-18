@@ -63,3 +63,18 @@ export function slotcontent() {
 export function toString(arg){
   return Object.prototype.toString.call(arg).slice(8, -1)
 }
+export function isArray(obj){
+  return toString(obj) === 'Array'
+}
+export function isPlainObject(obj){
+  return toString(obj) === 'Object'
+}
+export class Enum {
+  constructor(values){
+    values.forEach(item => {
+      let [name, value] = item
+      this[name] = value
+      this[value] = name
+    })
+  }
+}

@@ -30,11 +30,16 @@ export class EventBus {
       return Promise.all(rs);
   }
   // 移除消息
-  $off(msgName) {
+  $off(msgName, func) {
       if (!this.msgQueues.hasOwnProperty(msgName)) {
           return
       }
-      delete this.msgQueues[msgName]
+      if(func){
+        const index = this.msgQueues[msgName].findIndex(item => item === func)
+        this.msgQueues[msgName].splice(index, 1)
+      }else {
+          delete this.msgQueues[msgName]
+      }     
   }
 }
 export default {
